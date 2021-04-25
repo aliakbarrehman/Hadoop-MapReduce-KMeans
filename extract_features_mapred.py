@@ -14,15 +14,11 @@ class MrJobKMeans(MRJob):
         centroids = read_centroids(self.options.centroids)
         coordinates = line.split(',')
         x = []
-        index = 0
         for i in coordinates:
-            if index != 0:
-                x.append(float(i))
-                index += 1
-        index = 0
+            x.append(float(i))
         index = 0
         minDist = 10000
-        for i in range(1, centroids.shape[0]):
+        for i in range(0, centroids.shape[0]):
             dist = get_euclidean_distance(x, centroids[i, :])
             if (dist < minDist):
                 index = i
@@ -36,11 +32,8 @@ class MrJobKMeans(MRJob):
         counter = 0
         for i in values_list:
             temp = i.split(',')
-            index = 0
             for j in range(0, len(temp)):
-                if index != 0:
-                    centroid[0, j] += float(temp[j])
-                    index += 1
+                centroid[0, j] += float(temp[j])
             counter += 1
         centroid = centroid / counter
         temp = ''
@@ -49,7 +42,7 @@ class MrJobKMeans(MRJob):
                 temp += str(centroid[0, i])
             else:
                 temp += str(centroid[0, i]) + ','
-#        centroid = str(mx) + ',' + str(my)
+        # centroid = str(mx) + ',' + str(my)
         yield str(key), temp
 
 if __name__ == '__main__':

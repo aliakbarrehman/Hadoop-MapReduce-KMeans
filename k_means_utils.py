@@ -4,12 +4,16 @@ import random
 
 def read_centroids(filename):
     centroids_dataframe = pd.read_csv(filepath_or_buffer = filename, sep = ",")
-    x = centroids_dataframe[['x', 'y', 'z']]
+    select_columns = centroids_dataframe.columns[1:]
+    x = centroids_dataframe[select_columns]
     return x.to_numpy()
 
 def format_centroids(centroids):
     counter = 1
-    result = 'class,x,y\n'
+    result = 'result'
+    for i in range(0, centroids.shape[1]):
+        result += ',c-' + str(i)
+    result += '\n'
     for i in range(0, centroids.shape[0]):
         result += str(counter)
         for j in range(0, centroids.shape[1]):
@@ -41,11 +45,11 @@ def read_reducer_output(job, runner):
     for key, value in job.parse_output(runner.cat_output()):
         centroids.append(value)
     return centroids
-
-def diff(cs1,cs2):
+    
+def compare_centroids(cent_a, cent_b):
     max_dist = 0.0
-    for i in range(len(cs1)):
-        dist = get_euclidean_distance(cs1[i],cs2[i])
+    for i in range(len(cent_a)):
+        dist = get_euclidean_distance(cent_a[i], cent_b[i])
         if dist > max_dist:
             max_dist = dist
     return max_dist

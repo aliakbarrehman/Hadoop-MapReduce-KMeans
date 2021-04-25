@@ -2,15 +2,17 @@ from mrjob.job import MRJob
 from k_means_mapred import MrJobKMeans
 from k_means_utils import *
 import sys
+import timeit
 
 if __name__ == '__main__':
     args = sys.argv[1:]
     centroidFileName = 'centroids.csv'
     centroidsNumber = 3
     # creates random centroids
-    oldCentroids = create_random_centroids(centroidsNumber, 3)
+    oldCentroids = create_random_centroids(centroidsNumber, 5)
     write_centroids(centroidFileName, oldCentroids)
     iteration = 0
+    start_time = timeit.default_timer()
     while True:
         print('Iteration' + str(iteration))
         mr_job = MrJobKMeans(args)
@@ -26,14 +28,13 @@ if __name__ == '__main__':
                     newCentroids.append(temp)
             newCentroids = np.array(newCentroids)
             write_centroids(centroidFileName, newCentroids)
-        print 'K_Means.py'
-        print oldCentroids
-        print newCentroids
-        temp = diff(newCentroids, oldCentroids)
-        print temp
-        if temp < 0.00001:
+        cent_diff = compare_centroids(newCentroids, oldCentroids)
+        print cent_diff
+        if cent_diff < 0.001:
             print('Algorithm Converged!')
             break
         else:
             oldCentroids = newCentroids
         iteration += 1
+    time_taken = timeit.default_timer() - start_time
+    print time_taken
