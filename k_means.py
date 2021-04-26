@@ -1,5 +1,6 @@
 from mrjob.job import MRJob
 from k_means_mapred import MrJobKMeans
+from k_means_mapred_combiner import MrJobKMeansComb
 from k_means_utils import *
 import sys
 import timeit
@@ -8,6 +9,7 @@ if __name__ == '__main__':
     args = sys.argv[1:]
     centroidFileName = 'centroids.csv'
     centroidsNumber = 3
+    run_with_combiner = args[0]
     # creates random centroids
     oldCentroids = create_random_centroids(centroidsNumber, 5)
     write_centroids(centroidFileName, oldCentroids)
@@ -15,7 +17,10 @@ if __name__ == '__main__':
     start_time = timeit.default_timer()
     while True:
         print('Iteration' + str(iteration))
-        mr_job = MrJobKMeans(args)
+        if run_with_combiner:
+            mr_job = MrJobKMeansComb(args)
+        else:
+            mr_job = MrJobKMeans
         with mr_job.make_runner() as runner:
             runner.run()
             newCentroids = []

@@ -8,7 +8,7 @@ import timeit
 
 start_time = timeit.default_timer()
 spark_session = SparkSession.builder.appName('k_means').getOrCreate()
-data = spark_session.read.csv('expanded_data_cleaned_reduced.csv', header=True, inferSchema=True)
+data = spark_session.read.csv('expanded_data_cleaned.csv', header=True, inferSchema=True)
 
 cols = data.columns
 cols = cols[1:]
