@@ -10,6 +10,19 @@ class MrJobKMeans(MRJob):
         super(MrJobKMeans, self).configure_args()
         self.add_file_arg('--centroids')
 
+    def read_centroids(filename):
+        centroids_dataframe = pd.read_csv(filepath_or_buffer = filename, sep = ",")
+        select_columns = centroids_dataframe.columns[1:]
+        x = centroids_dataframe[select_columns]
+        return x.to_numpy()
+        
+    def get_euclidean_distance(point_a, point_b):
+        result = 0
+        point_b = point_b.tolist()
+        for i in range(0, len(point_a)):
+            result += ((point_a[i] - point_b[i]) ** 2)
+        return np.sqrt(result)
+        
     def mapper(self, _, line):
         centroids = read_centroids(self.options.centroids)
         coordinates = line.split(',')

@@ -29,8 +29,7 @@ if __name__ == '__main__':
             newCentroids = np.array(newCentroids)
             write_centroids(centroidFileName, newCentroids)
         cent_diff = compare_centroids(newCentroids, oldCentroids)
-        print cent_diff
-        if cent_diff < 0.001:
+        if cent_diff < 0.01:
             print('Algorithm Converged!')
             break
         else:

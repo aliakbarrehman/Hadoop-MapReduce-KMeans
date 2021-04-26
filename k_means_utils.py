@@ -39,12 +39,6 @@ def get_euclidean_distance(point_a, point_b):
     for i in range(0, len(point_a)):
         result += ((point_a[i] - point_b[i]) ** 2)
     return np.sqrt(result)
-
-def read_reducer_output(job, runner):
-    centroids = []
-    for key, value in job.parse_output(runner.cat_output()):
-        centroids.append(value)
-    return centroids
     
 def compare_centroids(cent_a, cent_b):
     max_dist = 0.0
@@ -53,3 +47,9 @@ def compare_centroids(cent_a, cent_b):
         if dist > max_dist:
             max_dist = dist
     return max_dist
+
+def read_reducer_output(job, runner):
+    centroids = []
+    for key, value in job.parse_output(runner.cat_output()):
+        centroids.append(value)
+    return centroids
