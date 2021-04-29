@@ -23,4 +23,4 @@ model = k_means.fit(assembled_data.select('features'))
 time_taken = timeit.default_timer() - start_time
 print time_taken
 
-write_centroids(model.clusterCenters())
+write_centroids('centroids.csv', model.clusterCenters())
